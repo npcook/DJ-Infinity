@@ -6,7 +6,7 @@
     <ProjectGuid>{bf763197-9874-4e72-90ec-3a554dee028c}</ProjectGuid>
     <ProjectHome />
     <ProjectView>ShowAllFiles</ProjectView>
-    <StartupFile>app.js</StartupFile>
+    <StartupFile>bin\dj.js</StartupFile>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <ProjectTypeGuids>{3AF33F2E-1136-4D97-BBB7-1795711AC8B8};{349c5851-65df-11da-9384-00065b846f21};{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}</ProjectTypeGuids>
@@ -17,7 +17,8 @@
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
   <ItemGroup>
     <Content Include="package.json" />
-    <Compile Include="app.js" />
+    <Compile Include="service.js" />
+    <Compile Include="website.js" />
     <Compile Include="routes\dj.js" />
     <Compile Include="routes\index.js" />
     <Compile Include="routes\users.js" />
