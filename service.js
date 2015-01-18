@@ -78,6 +78,10 @@ var Backend = function () {
             if (err)
                 throw err;
             
+            if (result.length != 1) {
+                doneCallback(undefined);
+                return;
+            }
             var djId = db.escape(result[0]['id']);
             db.query('SELECT name, album, artist FROM `songs` WHERE djid = ?', djId, function (err, result) {
                 if (err)
