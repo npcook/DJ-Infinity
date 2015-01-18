@@ -24,17 +24,18 @@ var Backend = function () {
     }
     
     this.addSongs = function (db, djName, songs) {
-        db.query('SELECT id FROM `djs` WHERE name = ?', [djName], function (err, result) {
+        db.query('SELECT id FROM `djs` WHERE name = ?', djName, function (err, result) {
             if (err)
                 throw err;
 
-            var djId = db.escape(result['id']);
+            var djId = db.escape(result[0]['id']);
             var insertQuery = 'INSERT INTO `songs` (djid, name, artist, album) VALUES ';
-            for (var song in songs) {
+            for (var i = 0; i < songs.length; ++i) {
+                var song = songs[i];
                 insertQuery += '(';
-                insertQuery += djId;
-                insertQuery += db.escape(song['name']);
-                insertQuery += db.escape(song['artist']);
+                insertQuery += djId + ',';
+                insertQuery += db.escape(song['name']) + ',';
+                insertQuery += db.escape(song['artist']) + ',';
                 insertQuery += db.escape(song['album']);
                 insertQuery += ')';
                 insertQuery += ', ';
@@ -131,9 +132,10 @@ var Handler = function (socket) {
         
     socket.write('you got it');
 
-    onLineReceived('{"message":"i am a dj","name":"cd"}');
-    onLineReceived('{"message":"user wants a song","djname":"cd","songname":"balls"}');
-    onLineReceived('{"message":"songs","songs":[{"name":"balls","album":"dicks","artist":"urmom"}]}');
+//    onLineReceived('{"message":"i am a dj","name":"cd"}');
+//    onLineReceived('{"message":"user wants a song","djname":"cd","songname":"balls"}');
+//    onLineReceived('{"message":"songs","songs":[{"name":"balls","album":"dicks","artist":"urmom"}]}');
+    onLineReceieved('{"message":"user wants a song","djname":"cd","songname":"Amerika"}');
 }
 
 module.exports = exports = function (socket) { return new Handler(socket); };
