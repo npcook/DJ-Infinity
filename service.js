@@ -6,8 +6,8 @@ var util = require('util');
 var Backend = function () {
     this.connectDb = function () {
         return mysql.createConnection({
-            host: 's2emahi86a.database.windows.net',
-            port: 1433,
+            host: 'tinfinity.net',
+            port: 3306,
             database: 'djinfinity',
             user: 'djinfinity',
             password: "Whit'smom",
@@ -92,6 +92,11 @@ var Handler = function (socket) {
     var djName = undefined;
     var self = this;
     
+    this.sendDjSongRequest = function (name) {
+        var message = { message: 'user wants a song', song: name };
+        socket.write(JSON.stringify(message) + "\r\n");
+    };
+    
     var onLineReceived = function (line) {
         var message = JSON.parse(line);
         
@@ -111,13 +116,6 @@ var Handler = function (socket) {
                 djHandler.sendDjSongRequest(message['songname']);
                 break;
         }
-
-        socket.write(line + "\r\n");
-    };
-    
-    this.sendDjSongRequest = function (name) {
-        var message = { message: 'user wants a song', song: name };
-        socket.write(JSON.stringify(message));
     };
 
     buffer.on('line', onLineReceived);
@@ -132,6 +130,10 @@ var Handler = function (socket) {
     })
         
     socket.write('you got it');
+
+    onLineReceived('{"message":"i am a dj","name":"cd"}');
+    onLineReceived('{"message":"user wants a song","djname":"cd","songname":"balls"}');
+    onLineReceived('{"message":"songs","songs":[{"name":"balls","album":"dicks","artist":"urmom"}]}');
 }
 
 module.exports = exports = function (socket) { return new Handler(socket); };
