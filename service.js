@@ -1,4 +1,4 @@
-﻿var debug = require('debug')('DJ-Infinity:server');
+﻿var console.log = require('console.log')('DJ-Infinity:server');
 var mysql = require('mysql');
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
@@ -61,7 +61,7 @@ var DataBuffer = function () {
 
     this.addData = function (data) {
         buffer = buffer + data;
-        debug('data receieved: ' + data);
+        console.log('data receieved: ' + data);
         
         while (true) {
             var newLineIndex = buffer.indexOf('\r');
@@ -95,14 +95,14 @@ var Handler = function (socket) {
     var self = this;
     
     this.sendDjSongRequest = function (name) {
-        debug('senddjsongrequest: ' + name);
+        console.log('senddjsongrequest: ' + name);
 
         var message = { message: 'user wants a song', song: name };
         socket.write(JSON.stringify(message) + "\r\n");
     };
     
     var onLineReceived = function (line) {
-        debug('message receieved: ' + line);
+        console.log('message receieved: ' + line);
         var message;
         try {
             message = JSON.parse(line);
@@ -141,7 +141,7 @@ var Handler = function (socket) {
         db.destroy();
     });
 
-    debug('connection');
+    console.log('connection');
 
 //    onLineReceived('{"message":"i am a dj","name":"cd"}');
 //    onLineReceived('{"message":"user wants a song","djname":"cd","songname":"balls"}');
