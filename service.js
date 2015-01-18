@@ -3,6 +3,8 @@ var mysql = require('mysql');
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 
+var handlerMap = {};
+
 var Backend = function () {
     this.connectDb = function () {
         return mysql.createConnection({
@@ -92,6 +94,10 @@ var Backend = function () {
         db.query('TRUNCATE TABLE `songs`', function (err, result) { });
         db.end();
     }
+
+    this.getDjHandler = function (djName) {
+        return handlers[djName];
+    };
 };
 
 var backend = new Backend();
@@ -124,8 +130,6 @@ var DataBuffer = function () {
 }
 
 util.inherits(DataBuffer, EventEmitter);
-
-var handlerMap = {};
 
 var Handler = function (socket) {
     var socket = socket;
@@ -172,10 +176,10 @@ var Handler = function (socket) {
                 backend.addSongs(db, djName, message['songs']);
                 break;
 
-            case 'user wants a song':
-                var djHandler = handlerMap[message['djname']];
-                djHandler.sendDjSongRequest(message['songname'], message['songartist']);
-                break;
+//            case 'user wants a song':
+//                var djHandler = handlerMap[message['djname']];
+//                djHandler.sendDjSongRequest(message['songname'], message['songartist']);
+//                break;
 
             case 'dj songs':
                 var songs = backend.getSongs(db, message['djname'], function (songs) {
