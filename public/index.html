@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap 101 Template</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#"><span style="color:#007BAD">DJ Infinity</span></a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Begin page content -->
+    <div class="container">
+		<div style="margin-bottom:100px"></div>
+	  <div id="connect" class = "row">
+	  <div class="form-group">
+		<input style="max-width:300px;" id="djname" type="text" class="form-control" id="exampleInputAmount" placeholder="Enter a DJ name..."><button type="submit" class="btn btn-primary" id="connectbutton">Connect</button>
+	`	</div>
+	</div>
+	<div class = "row">
+		<input id="search" type="text" class="form-control" placeholder="Search for an song, artist, or album...">
+	</div>
+	<div class = "row">
+		<div id="big" class="col-xs-6 col-sm-2">
+		<div class='stock-widget'>
+			<img src = "http://userserve-ak.last.fm/serve/174s/90454635.png" style="/*border: #b2b2b2 solid 1px*/"/>
+			<div style="align: center; font-weight: bold;">Now or Never</div>
+			<div>Tritonal</div>
+			<div id='album' style="display:none;">Tritonia</div>
+			<div id='request' style="display:none;"><button type="button" class="btn btn-primary btn-sm">Request</button></div>
+		</div>
+		</div>
+	</div>
+    <div id='library'>
+	</div>
+	</div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+	<script src="js/lib/lastfm.api.md5.js"></script>
+	<script src="js/lib/lastfm.api.js"></script>
+	<script src="js/lib/lastfm.api.cache.js"></script>
+	<script src="js/eventhandler.js"></script>
+	<script src="js/model/itemmodel.js"></script>
+	<script src="js/typeahead.js"></script>
+	<script src="js/views/itemview.js"></script>
+	<script src="js/model/librarymodel.js"></script>
+	<script src="js/views/libraryview.js"></script>
+	<script src="js/controllers/itemcontroller.js"></script>
+	<script>
+	musicCollection = [];
+	musicControllers = [];
+	var djName = ""; //%%This is so bad -- demo code
+	function onConnectButton()
+	{
+		var name = $('#djname').val();
+		
+		$.get("http://djinfinity.cloudapp.net/library/" + name, function (data)//$.ajax({url: "http://djinfinity.cloudapp.net/library/CD",dataType: "jsonp",success: function (data) 
+		{
+			if(data == null || data == 0 || data == "")
+			{
+				return;
+			} else {
+				//json = JSON.parse(data);
+				for(i = 0; i < data.length; i++)
+				{
+					item = new ItemModel(i, data[i]["name"], data[i]["artist"], data[i]["album"]);
+					view = new ItemView(item, name);//%%This is so bad -- demo code);
+					controller = new ItemController(item, view);
+					musicCollection.push(view);
+					//musicControllers.push(controller);
+				}
+				$('#connect').css("display", "none");
+				libraryModel = new LibraryModel(musicCollection, 12);
+				libraryView = new LibraryView(libraryModel, '#library');
+				libraryView.render();
+				
+			}
+		}, "json");
+	
+	}
+	$('#connectbutton').click(onConnectButton);
+
+	
+	//http://djinfinity.cloudapp.net/library/CD/Amerika/Rammstein
+/*	a = $.ajax({
+  url: "http://djinfinity.cloudapp.net/request/CD/Amerika/Rammstein",
+  dataType: "jsonp",
+  success: function (data) {
+  alert("Success");
+  }
+  });*/
+	/*a = $.ajax({
+  url: "http://djinfinity.cloudapp.net/library/CD",
+  dataType: "jsonp",
+  success: function (data) {
+	console.log(JSON.stringify(data));
+	return JSON.stringify(data);
+  }
+*/
+//////////////////////THISSHITWORKS
+/*	item1 = new ItemModel(1, "Now or Never", "Tritonal", "Tritonia");
+	item2 = new ItemModel(2, "Immunize", "Pendulum", "Immersion");
+	item3 = new ItemModel(3, "Propane Nightmares", "Pendulum", "In Silico");
+	view1 = new ItemView(item1, document.getElementById('librow1'));
+	view2 = new ItemView(item2, document.getElementById('librow1'));
+	view3 = new ItemView(item3, document.getElementById('librow1'));
+	
+	viewArray = [view1, view2, view3];
+	for(var i = 0; i < 100; i++)
+	{
+		item = new ItemModel(4 + i, "Song " + i, "Artist " + i, "Album" + i);
+		view = new ItemView(item, 0);
+		controller = new ItemController(item, view);
+		viewArray.push(view);
+		view.attatchEvents();
+	}
+	libraryModel = new LibraryModel(viewArray, 12);
+	libraryView = new LibraryView(libraryModel, '#library');
+	libraryView.render(); */
+/////////////////////////////////////////END OF SHIT
+	//view1.render();
+	//view2.render();
+	//view3.render();
+	</script>
+	
+	<script>
+
+$('#big').delay(1500).hover(
+	function(){
+	$('#album').css("opacity", 0.0);
+	$('#request').css("opacity", 0.0);	
+	$('#album').css("display", "inline"); 
+	$('#request').css("display", "inline"); 
+	$('#album').fadeTo(350, 1.0);
+	$('#request').fadeTo(350, 1.0);
+	},
+	function(){ $('#album').css("display", "none"); $('#request').css("display", "none"); })
+var lastQuery = "";
+$('#search').change(function(){
+	query = $(this).val();
+	var searchDirection = 0;
+	if(query.length > lastQuery.length)
+	{
+		lastQuery = query;
+		searchDirection = 1;
+	}
+	if(query.length < lastQuery.length)
+	{
+		lastQuery = query;
+		searchDirection = -1;
+	}
+	$('#search').attr('disabled','disabled');
+	libraryView.renderSearch(query, searchDirection);
+});
+		
+</script>
+	<style>
+	.login_div {
+    position: absolute;
+    
+    /*width: 300px;
+    height: 300px;*/
+    
+    /* Center form in page horizontally & vertically */
+    top: 50%;
+    left: 50%;
+    margin-top: -150px;
+    margin-left: -150px;
+	}
+
+	.login_form {
+		/*width: 300px;
+		height: 300px;*/
+		
+		margin: 0;
+		padding: 0;
+	}
+	
+	.stock-widget {
+		background: #FFFFFF;
+		width: 190px;
+		height: 220px;
+		text-align: center;
+		font-family: 'Helvetica Neue', Arial, sans-serif;
+		font-weight: 300;
+		margin-bottom: 40px;
+		border-right: #b2b2b2 solid 1px;
+		border-bottom: #b2b2b2 solid 1px;
+		border-left: #b2b2b2 solid 1px;
+		border-top: #00ccff solid 3px;
+		transition:height 0.5s;
+		-webkit-transition:height 0.5s;
+	}
+	.grow {
+    height: 100px; /* Origional height */
+    width: 22%; /* Origional width */
+    margin: 5px 1% 5px 1%; /* Just for presentation (Not required) */
+    float: left; /* Just for presentation (Not required) */
+    position: relative; /* Just for presentation (Not required) */
+    transition:height 0.5s; /* Animation time */
+    -webkit-transition:height 0.5s; /* For Safari */
+	}
+
+	.stock-widget:hover {
+		border-top: #e74c3c solid 3px;
+		height: 260px;
+	}
+	</style>
+  </body>
+</html>
