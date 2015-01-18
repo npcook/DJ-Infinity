@@ -8,13 +8,15 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/library/:djname', function (req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
     var db = service().connectDb();
     service().getSongs(db, req.params.djname, function (songs) {
         res.json(songs);
     });
 });
 
-router.post('/request/:djname/:songname/:artistname', function (req, res, next) {
+router.get('/request/:djname/:songname/:artistname', function (req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
     var handler = service().getDjHandler(req.params.djname);
     if (handler != undefined) {
         handler.sendDjSongRequest(req.params.songname, req.params.artistname);
