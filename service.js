@@ -1,4 +1,4 @@
-﻿var console.log = require('console.log')('DJ-Infinity:server');
+﻿var debug = require('debug')('DJ-Infinity:server');
 var mysql = require('mysql');
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
@@ -141,7 +141,7 @@ var Handler = function (socket) {
         db.destroy();
     });
 
-    console.log('connection');
+    console.log('connection')
 
 //    onLineReceived('{"message":"i am a dj","name":"cd"}');
 //    onLineReceived('{"message":"user wants a song","djname":"cd","songname":"balls"}');
