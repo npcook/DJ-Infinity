@@ -135,7 +135,7 @@ var Handler = function (socket) {
 //    onLineReceived('{"message":"i am a dj","name":"cd"}');
 //    onLineReceived('{"message":"user wants a song","djname":"cd","songname":"balls"}');
 //    onLineReceived('{"message":"songs","songs":[{"name":"balls","album":"dicks","artist":"urmom"}]}');
-    onLineReceieved('{"message":"user wants a song","djname":"cd","songname":"Amerika"}');
+    onLineReceived('{"message":"user wants a song","djname":"cd","songname":"Amerika"}');
 }
 
 module.exports = exports = function (socket) { return new Handler(socket); };
