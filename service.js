@@ -141,6 +141,8 @@ var Handler = function (socket) {
         db.destroy();
     });
 
+    debug('connection');
+
 //    onLineReceived('{"message":"i am a dj","name":"cd"}');
 //    onLineReceived('{"message":"user wants a song","djname":"cd","songname":"balls"}');
 //    onLineReceived('{"message":"songs","songs":[{"name":"balls","album":"dicks","artist":"urmom"}]}');
