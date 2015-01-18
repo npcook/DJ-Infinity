@@ -14,7 +14,7 @@ router.get('/library/:djname', function (req, res, next) {
     });
 });
 
-router.get('/request/:djname/:songname/:artistname', function (req, res, next) {
+router.post('/request/:djname/:songname/:artistname', function (req, res, next) {
     var handler = service().getDjHandler(req.params.djname);
     if (handler != undefined) {
         handler.sendDjSongRequest(req.params.songname, req.params.artistname);

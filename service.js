@@ -96,7 +96,7 @@ var Backend = function () {
     }
 
     this.getDjHandler = function (djName) {
-        return handlers[djName];
+        return handlerMap[djName];
     };
 };
 
