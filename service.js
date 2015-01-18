@@ -6,7 +6,8 @@ var util = require('util');
 var Backend = function () {
     this.connectDb = function () {
         return mysql.createConnection({
-            host: 'localhost',
+            host: 's2emahi86a.database.windows.net',
+            port: 1433,
             database: 'djinfinity',
             user: 'djinfinity',
             password: "Whit'smom",
