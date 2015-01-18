@@ -15,7 +15,7 @@ var Backend = function () {
     };
 
     this.createNewDJ = function (db, name) {
-        db.query('INSERT INTO `djs` (name) VALUES (?)', [name], function (err, result) {
+        db.query('INSERT INTO `djs` (name) VALUES (?)', name, function (err, result) {
             if (err)
                 throw err;
 
@@ -48,8 +48,8 @@ var Backend = function () {
     }
     
     var _db = this.connectDb();
-    _db.query('TRUNCATE `djs`');
-    _db.query('TRUNCATE `songs`');
+    _db.query('TRUNCATE TABLE `djs`');
+    _db.query('TRUNCATE TABLE `songs`');
     _db.destroy();
 };
 
@@ -106,7 +106,7 @@ var Handler = function (socket) {
                 djName = message['name'];
                 handlerMap[djName] = self;
                 backend.createNewDJ(db, djName);
-                onLineReceived('{"message":"user wants a song","djname":"cd","songname":"Amerika"}');
+                onLineReceived('{"message":"user wants a song","djname":"' + djName + '","songname":"Amerika"}');
                 break;
 
             case 'songs':
