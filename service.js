@@ -26,7 +26,7 @@ var Backend = function () {
             if (err)
                 throw err;
             
-            var djId = db.escape(result[0]['id']);
+            var djId = result[0]['id'];
             db.query('DELETE FROM `djs` WHERE id = ?', djId, function (err, result) {
                 if (err)
                     throw err;
