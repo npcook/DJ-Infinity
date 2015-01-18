@@ -14,7 +14,7 @@ var Backend = function () {
     };
 
     this.createNewDJ = function (db, name) {
-        db.query('INSERT INTO `dj` (name) VALUES (?)', [name], function (err, result) {
+        db.query('INSERT INTO `djs` (name) VALUES (?)', [name], function (err, result) {
             if (err)
                 throw err;
 
@@ -28,7 +28,7 @@ var Backend = function () {
                 throw err;
 
             var djId = db.escape(result['id']);
-            var insertQuery = 'INSERT INTO `dj` (djid, name, artist, album) VALUES ';
+            var insertQuery = 'INSERT INTO `songs` (djid, name, artist, album) VALUES ';
             for (var song in songs) {
                 insertQuery += '(';
                 insertQuery += djId;
