@@ -21,19 +21,28 @@ var Backend = function () {
         });
     };
     
-    this.deleteDj = function (db, djName) {
+    this.deleteDj = function (db, djName, doneCallback) {
         db.query('SELECT id FROM `djs` WHERE name = ?', djName, function (err, result) {
             if (err)
                 throw err;
             
+            var firstQueryDone = false;
             var djId = result[0]['id'];
             db.query('DELETE FROM `djs` WHERE id = ?', djId, function (err, result) {
                 if (err)
                     throw err;
+
+                if (firstQueryDone)
+                    doneCallback();
+                firstQueryDone = true;
             });
             db.query('DELETE FROM `songs` WHERE djid = ?', djId, function (err, result) {
                 if (err)
                     throw err;
+                
+                if (firstQueryDone)
+                    doneCallback();
+                firstQueryDone = true;
             });
         });
     }
@@ -185,8 +194,9 @@ var Handler = function (socket) {
         if (djName != undefined) {
             delete handlerMap[djName];
         }
-        backend.deleteDj(db, djName);
-        db.end();
+        backend.deleteDj(db, djName, function () {
+            db.end();
+        });
     }
     
     var onError = function (ex) {
