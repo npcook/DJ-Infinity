@@ -193,10 +193,12 @@ var Handler = function (socket) {
     var onDone = function () {
         if (djName != undefined) {
             delete handlerMap[djName];
+            backend.deleteDj(db, djName, function () {
+                db.end();
+            });
         }
-        backend.deleteDj(db, djName, function () {
+        else
             db.end();
-        });
     }
     
     var onError = function (ex) {
