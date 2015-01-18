@@ -34,19 +34,8 @@
 		<input style="max-width:300px;" id="djname" type="text" class="form-control" id="exampleInputAmount" placeholder="Enter a DJ name..."><button type="submit" class="btn btn-primary" id="connectbutton">Connect</button>
 	`	</div>
 	</div>
-	<div class = "row">
+	<div id="searchrow" style="display:none;" class = "row">
 		<input id="search" type="text" class="form-control" placeholder="Search for an song, artist, or album...">
-	</div>
-	<div class = "row">
-		<div id="big" class="col-xs-6 col-sm-2">
-		<div class='stock-widget'>
-			<img src = "http://userserve-ak.last.fm/serve/174s/90454635.png" style="/*border: #b2b2b2 solid 1px*/"/>
-			<div style="align: center; font-weight: bold;">Now or Never</div>
-			<div>Tritonal</div>
-			<div id='album' style="display:none;">Tritonia</div>
-			<div id='request' style="display:none;"><button type="button" class="btn btn-primary btn-sm">Request</button></div>
-		</div>
-		</div>
 	</div>
     <div id='library'>
 	</div>
@@ -69,6 +58,7 @@
 	musicCollection = [];
 	musicControllers = [];
 	var djName = ""; //%%This is so bad -- demo code
+	libraryView = null;
 	function onConnectButton()
 	{
 		var name = $('#djname').val();
@@ -89,9 +79,11 @@
 					//musicControllers.push(controller);
 				}
 				$('#connect').css("display", "none");
+				$('#searchrow').css("display", "inline");
 				libraryModel = new LibraryModel(musicCollection, 12);
 				libraryView = new LibraryView(libraryModel, '#library');
 				libraryView.render();
+				
 				
 			}
 		}, "json");
@@ -116,7 +108,7 @@
 	return JSON.stringify(data);
   }
 */
-//////////////////////THISSHITWORKS
+//////////////////////STUFF
 /*	item1 = new ItemModel(1, "Now or Never", "Tritonal", "Tritonia");
 	item2 = new ItemModel(2, "Immunize", "Pendulum", "Immersion");
 	item3 = new ItemModel(3, "Propane Nightmares", "Pendulum", "In Silico");
@@ -136,24 +128,13 @@
 	libraryModel = new LibraryModel(viewArray, 12);
 	libraryView = new LibraryView(libraryModel, '#library');
 	libraryView.render(); */
-/////////////////////////////////////////END OF SHIT
+/////////////////////////////////////////END OF STUFF
 	//view1.render();
 	//view2.render();
 	//view3.render();
 	</script>
 	
 	<script>
-
-$('#big').delay(1500).hover(
-	function(){
-	$('#album').css("opacity", 0.0);
-	$('#request').css("opacity", 0.0);	
-	$('#album').css("display", "inline"); 
-	$('#request').css("display", "inline"); 
-	$('#album').fadeTo(350, 1.0);
-	$('#request').fadeTo(350, 1.0);
-	},
-	function(){ $('#album').css("display", "none"); $('#request').css("display", "none"); })
 var lastQuery = "";
 $('#search').change(function(){
 	query = $(this).val();
@@ -195,7 +176,7 @@ $('#search').change(function(){
 		padding: 0;
 	}
 	
-	.stock-widget {
+	.song-widget {
 		background: #FFFFFF;
 		width: 190px;
 		height: 220px;
@@ -220,7 +201,7 @@ $('#search').change(function(){
     -webkit-transition:height 0.5s; /* For Safari */
 	}
 
-	.stock-widget:hover {
+	.song-widget:hover {
 		border-top: #e74c3c solid 3px;
 		height: 260px;
 	}
