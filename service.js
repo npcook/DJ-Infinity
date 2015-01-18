@@ -94,12 +94,15 @@ var Handler = function (socket) {
     var self = this;
     
     this.sendDjSongRequest = function (name) {
+        debug('senddjsongrequest: ' + name);
+
         var message = { message: 'user wants a song', song: name };
         socket.write(JSON.stringify(message) + "\r\n");
     };
     
     var onLineReceived = function (line) {
         var message = JSON.parse(line);
+        debug('message receieved: ' + line);
         
         switch (message['message']) {
             case 'i am a dj':
@@ -129,9 +132,7 @@ var Handler = function (socket) {
             delete handlerMap[djName];
         }
         db.destroy();
-    })
-        
-    socket.write('you got it');
+    });
 
 //    onLineReceived('{"message":"i am a dj","name":"cd"}');
 //    onLineReceived('{"message":"user wants a song","djname":"cd","songname":"balls"}');
