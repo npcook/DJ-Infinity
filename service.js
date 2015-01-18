@@ -21,13 +21,13 @@ var Backend = function () {
 
 
         });
-    }
+    };
     
     this.addSongs = function (db, djName, songs) {
         db.query('SELECT id FROM `djs` WHERE name = ?', djName, function (err, result) {
             if (err)
                 throw err;
-
+            
             var djId = db.escape(result[0]['id']);
             var insertQuery = 'INSERT INTO `songs` (djid, name, artist, album) VALUES ';
             for (var i = 0; i < songs.length; ++i) {
@@ -45,12 +45,29 @@ var Backend = function () {
             
             db.query(insertQuery);
         });
-    }
+    };
     
-    var _db = this.connectDb();
-    _db.query('TRUNCATE TABLE `djs`', function (err, result) { });
-    _db.query('TRUNCATE TABLE `songs`', function (err, result) { });
-    _db.destroy();
+    this.getSongs = function (db, djName, doneCallback) {
+        db.query('SELECT id FROM `djs` WHERE name = ?', djName, function (err, result) {
+            if (err)
+                throw err;
+            
+            var djId = db.escape(result[0]['id']);
+            db.query('SELECT name, album, artist FROM `songs` WHERE djid = ?', djId, function (err, result) {
+                if (err)
+                    throw err;
+                
+                doneCallback(result);
+            });
+        });
+    };
+    
+    this.purgeDatabase = function () {
+        var db = this.connectDb();
+        db.query('TRUNCATE TABLE `djs`', function (err, result) { });
+        db.query('TRUNCATE TABLE `songs`', function (err, result) { });
+        db.end();
+    }
 };
 
 var backend = new Backend();
@@ -61,7 +78,6 @@ var DataBuffer = function () {
 
     this.addData = function (data) {
         buffer = buffer + data;
-        console.log('data receieved: ' + data);
         
         while (true) {
             var newLineIndex = buffer.indexOf('\r');
@@ -94,29 +110,37 @@ var Handler = function (socket) {
     var djName = undefined;
     var self = this;
     
+    var sendMessage = function (json) {
+        socket.write(JSON.stringify(json) + "\r\n");
+    }
+    
     this.sendDjSongRequest = function (name) {
         console.log('senddjsongrequest: ' + name);
 
         var message = { message: 'user wants a song', song: name };
-        socket.write(JSON.stringify(message) + "\r\n");
+        sendMessage(message);
     };
     
     var onLineReceived = function (line) {
-        console.log('message receieved: ' + line);
         var message;
         try {
             message = JSON.parse(line);
         }
         catch (ex) {
+            console.log('invalid JSON received: ' + ex);
             return;
         }
         
         switch (message['message']) {
             case 'i am a dj':
                 djName = message['name'];
+                if (djName == undefined) {
+                    console.log('invalid dj name');
+                    return;
+                }
                 handlerMap[djName] = self;
                 backend.createNewDJ(db, djName);
-                onLineReceived('{"message":"user wants a song","djname":"' + djName + '","songname":"Amerika"}');
+                onLineReceived('{"message":"user wants a song","djname":"' + djName + '","songname":"Amerika","songartist":"Rommstein"}');
                 break;
 
             case 'songs':
@@ -125,27 +149,48 @@ var Handler = function (socket) {
 
             case 'user wants a song':
                 var djHandler = handlerMap[message['djname']];
-                djHandler.sendDjSongRequest(message['songname']);
+                djHandler.sendDjSongRequest(message['songname'], message['songartist']);
+                break;
+
+            case 'dj songs':
+                var songs = backend.getSongs(db, message['djname'], function (songs) {
+                    var message = { message: 'songs', songs: songs };
+                    sendMessage(message);
+                });
                 break;
         }
     };
+    
+    var onDone = function () {
+        if (djName != undefined) {
+            delete handlerMap[djName];
+        }
+        db.destroy();
+    }
+    
+    var onError = function (ex) {
+        console.log('error in socket: ' + ex);
+        onDone();
+    }
 
     buffer.on('line', onLineReceived);
 
     socket.setEncoding('utf-8');
     socket.on('data', buffer.addData);
-    socket.on('end', function () {
-        if (djName != undefined) {
-            delete handlerMap[djName];
-        }
-        db.destroy();
-    });
+    socket.on('end', onDone);
+    socket.on('error', onError);
 
-    console.log('connection')
-
-//    onLineReceived('{"message":"i am a dj","name":"cd"}');
-//    onLineReceived('{"message":"user wants a song","djname":"cd","songname":"balls"}');
-//    onLineReceived('{"message":"songs","songs":[{"name":"balls","album":"dicks","artist":"urmom"}]}');
+    console.log('connection');
+//    onLineReceived(JSON.stringify({ message: 'i am a dj', name: 'cd' }));
+//    onLineReceived(JSON.stringify({ message: 'songs', songs: [{ name: '1', album: '2', artist: '3' }] }));
+//0    onLineReceived(JSON.stringify({ message: 'dj songs', djname: 'cd' }));
 }
 
-module.exports = exports = function (socket) { return new Handler(socket); };
+module.exports = exports = function (socket) {
+    if (socket == undefined) {
+        return backend;
+    }
+    else {
+        return new Handler(socket);
+    }
+};

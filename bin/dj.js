@@ -9,6 +9,7 @@ var debug = require('debug')('DJ-Infinity:server');
 var http = require('http');
 var net = require('net');
 var service = require('../service');
+service().purgeDatabase();
 
 /**
  * Get port from environment and store in Express.

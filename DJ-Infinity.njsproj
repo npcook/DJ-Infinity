@@ -19,7 +19,6 @@
     <Content Include="package.json" />
     <Compile Include="service.js" />
     <Compile Include="website.js" />
-    <Compile Include="routes\dj.js" />
     <Compile Include="routes\index.js" />
     <Compile Include="routes\users.js" />
     <Content Include="views\error.jade" />
