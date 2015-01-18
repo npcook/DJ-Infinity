@@ -48,8 +48,8 @@ var Backend = function () {
     }
     
     var _db = this.connectDb();
-    _db.query('TRUNCATE TABLE `djs`');
-    _db.query('TRUNCATE TABLE `songs`');
+    _db.query('TRUNCATE TABLE `djs`', function (err, result) { });
+    _db.query('TRUNCATE TABLE `songs`', function (err, result) { });
     _db.destroy();
 };
 
@@ -61,6 +61,7 @@ var DataBuffer = function () {
 
     this.addData = function (data) {
         buffer = buffer + data;
+        debug('data receieved: ' + data);
         
         while (true) {
             var newLineIndex = buffer.indexOf('\r');
@@ -101,8 +102,14 @@ var Handler = function (socket) {
     };
     
     var onLineReceived = function (line) {
-        var message = JSON.parse(line);
         debug('message receieved: ' + line);
+        var message;
+        try {
+            message = JSON.parse(line);
+        }
+        catch (ex) {
+            return;
+        }
         
         switch (message['message']) {
             case 'i am a dj':
