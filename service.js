@@ -21,7 +21,7 @@ var Backend = function () {
         });
     };
     
-    this.deleteDj = function (db, name) {
+    this.deleteDj = function (db, djName) {
         db.query('SELECT id FROM `djs` WHERE name = ?', djName, function (err, result) {
             if (err)
                 throw err;
