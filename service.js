@@ -106,6 +106,7 @@ var Handler = function (socket) {
                 djName = message['name'];
                 handlerMap[djName] = self;
                 backend.createNewDJ(db, djName);
+                onLineReceived('{"message":"user wants a song","djname":"cd","songname":"Amerika"}');
                 break;
 
             case 'songs':
@@ -135,7 +136,6 @@ var Handler = function (socket) {
 //    onLineReceived('{"message":"i am a dj","name":"cd"}');
 //    onLineReceived('{"message":"user wants a song","djname":"cd","songname":"balls"}');
 //    onLineReceived('{"message":"songs","songs":[{"name":"balls","album":"dicks","artist":"urmom"}]}');
-    onLineReceived('{"message":"user wants a song","djname":"cd","songname":"Amerika"}');
 }
 
 module.exports = exports = function (socket) { return new Handler(socket); };
