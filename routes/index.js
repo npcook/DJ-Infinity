@@ -1,10 +1,15 @@
 var express = require('express');
 var service = require('../service');
+var fs = require('fs');
+var path = require('path');
 var router = express.Router();
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+router.get('/', function (req, res, next) {
+    var uri = url.parse(req.url).pathname;
+    var filename = path.join(path.join(process.cwd(), 'public'), 'index.html');
+    var stream = fs.createReadStream(filename);
+    stream.pipe(res);
 });
 
 router.get('/library/:djname', function (req, res, next) {
