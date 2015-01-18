@@ -18,10 +18,25 @@ var Backend = function () {
         db.query('INSERT INTO `djs` (name) VALUES (?)', name, function (err, result) {
             if (err)
                 throw err;
-
-
         });
     };
+    
+    this.deleteDj = function (db, name) {
+        db.query('SELECT id FROM `djs` WHERE name = ?', djName, function (err, result) {
+            if (err)
+                throw err;
+            
+            var djId = db.escape(result[0]['id']);
+            db.query('DELETE FROM `djs` WHERE id = ?', djId, function (err, result) {
+                if (err)
+                    throw err;
+            });
+            db.query('DELETE FROM `songs` WHERE djid = ?', djId, function (err, result) {
+                if (err)
+                    throw err;
+            });
+        });
+    }
     
     this.addSongs = function (db, djName, songs) {
         db.query('SELECT id FROM `djs` WHERE name = ?', djName, function (err, result) {
@@ -122,6 +137,7 @@ var Handler = function (socket) {
     };
     
     var onLineReceived = function (line) {
+        console.log(line);
         var message;
         try {
             message = JSON.parse(line);
@@ -140,7 +156,7 @@ var Handler = function (socket) {
                 }
                 handlerMap[djName] = self;
                 backend.createNewDJ(db, djName);
-                onLineReceived('{"message":"user wants a song","djname":"' + djName + '","songname":"Amerika","songartist":"Rommstein"}');
+//                onLineReceived('{"message":"user wants a song","djname":"' + djName + '","songname":"Amerika","songartist":"Rommstein"}');
                 break;
 
             case 'songs':
@@ -158,6 +174,10 @@ var Handler = function (socket) {
                     sendMessage(message);
                 });
                 break;
+
+            default:
+                console.log('unrecognized message');
+                break;
         }
     };
     
@@ -165,7 +185,8 @@ var Handler = function (socket) {
         if (djName != undefined) {
             delete handlerMap[djName];
         }
-        db.destroy();
+        backend.deleteDj(db, djName);
+        db.end();
     }
     
     var onError = function (ex) {
@@ -181,9 +202,6 @@ var Handler = function (socket) {
     socket.on('error', onError);
 
     console.log('connection');
-//    onLineReceived(JSON.stringify({ message: 'i am a dj', name: 'cd' }));
-//    onLineReceived(JSON.stringify({ message: 'songs', songs: [{ name: '1', album: '2', artist: '3' }] }));
-//0    onLineReceived(JSON.stringify({ message: 'dj songs', djname: 'cd' }));
 }
 
 module.exports = exports = function (socket) {
