@@ -138,10 +138,10 @@ var Handler = function (socket) {
         socket.write(JSON.stringify(json) + "\r\n");
     }
     
-    this.sendDjSongRequest = function (name) {
-        console.log('senddjsongrequest: ' + name);
+    this.sendDjSongRequest = function (songName, artistName) {
+        console.log('senddjsongrequest: ' + songName + ' ' + artistName);
 
-        var message = { message: 'user wants a song', song: name };
+        var message = { message: 'user wants a song', songname: songName, artistname: artistName };
         sendMessage(message);
     };
     
