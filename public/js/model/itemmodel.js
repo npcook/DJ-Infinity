@@ -11,7 +11,7 @@ function ItemModel(id, name, artist, album)
 	this.artist = artist;
 	this.album = album;
 	this.isLoaded = false;
-	this.albumArt = "https://cdn3.iconfinder.com/data/icons/iconic-1/28/x-128.png";
+	this.albumArt = "img/ajax-loader.gif";//"https://cdn3.iconfinder.com/data/icons/iconic-1/28/x-128.png";
 	self = this;
 	this.imageLoadEvent = new Event(this);
 	//this.imageLoadEvent.attatch(function(data){

@@ -6,6 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>DJInfinity</title>
 
+	<style>
+		
+	.marquee {
+		width: 130px;
+		margin: 0 auto;
+		white-space: nowrap;
+		overflow: hidden;
+	}
+
+	.marquee span {
+		display: inline-block;
+		padding-left: 100%;
+		text-indent: 0;
+		animation: marquee 10s linear infinite;
+	}
+
+	@keyframes marquee {
+		0%   { transform: translate(0, 0); }
+		100% { transform: translate(-100%, 0); }
+	}
+	</style>
     <!-- Bootstrap -->
     <link href="css/bootstrap.css" rel="stylesheet">
 
@@ -34,16 +55,19 @@
 		<input style="max-width:300px;" id="djname" type="text" class="form-control" id="exampleInputAmount" placeholder="Enter a DJ name..."><button type="submit" class="btn btn-primary" id="connectbutton">Connect</button>
 	`	</div>
 	</div>
-	<div id="searchrow" style="display:none;" class = "row">
-		<input id="search" type="text" class="form-control" placeholder="Search for an song, artist, or album...">
+	<div id="searchrow" style="display: none;" class = "row">
+		<input id="search" type="text" class="form-control" placeholder="Search for a song, artist, or album...">
 	</div>
     <div id='library'>
 	</div>
+	<div id='more' style='display: none; align: center;' class="row"><button onclick="libraryView.loadMore(12);" type="button" class="btn btn-primary btn-lg">Load More</button></div>
+	<div id='test' class='mymarquee'>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</div>
 	</div>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
+	<script src="js/lib/jquery.marquee.js" type="text/javascript"></script>
 	<script src="js/lib/lastfm.api.md5.js"></script>
 	<script src="js/lib/lastfm.api.js"></script>
 	<script src="js/lib/lastfm.api.cache.js"></script>
@@ -64,32 +88,34 @@
 	function onConnectButton()
 	{
 		var name = $('#djname').val();
-		
-		$.get("http://djinfinity.cloudapp.net/library/" + name, function (data)//$.ajax({url: "http://djinfinity.cloudapp.net/library/CD",dataType: "jsonp",success: function (data) 
+		$('#library').append("<div class='row'><img src='img/ajax-loader.gif' style = 'text-align: center;' ></div>");
+		$.get("http://djinfinity.cloudapp.net/library/" + name, function (data)//$.ajax({url:"http://djinfinity.cloudapp.net/library/" + name, dataType: "jsonp", success: function(data) //$.get("http://djinfinity.cloudapp.net/library/" + name, function (data)//$.ajax({url: "http://djinfinity.cloudapp.net/library/CD",dataType: "jsonp",success: function (data) 
 		{
 			if(data == null || data == 0 || data == "")
 			{
+				alert();
 				return;
 			} else {
 				//json = JSON.parse(data);
 				for(i = 0; i < data.length; i++)
 				{
 					item = new ItemModel(i, data[i]["name"], data[i]["artist"], data[i]["album"]);
-					item.albumArt = demoPics[i];
-					view = new ItemView(item, name);//%%This is so bad -- demo code);
+					//item.albumArt = demoPics[i];
+					view = new ItemView(item, '#musicParent' + i);//view = new ItemView(item, name);//%%This is so bad -- demo code);
 					controller = new ItemController(item, view);
 					musicCollection.push(view);
 					//musicControllers.push(controller);
 				}
 				$('#connect').css("display", "none");
 				$('#searchrow').css("display", "inline");
+				$('#more').css("display", "inline");
 				libraryModel = new LibraryModel(musicCollection, 12);
 				libraryView = new LibraryView(libraryModel, '#library');
 				libraryView.render();
-				
-				
 			}
-		}, "json");
+		}, "json");//, failure: function(data){
+			//alert();
+		//}});
 	
 	}
 	$('#connectbutton').click(onConnectButton);
@@ -145,7 +171,7 @@ success: function(data) {
 	
 	<script>
 var lastQuery = "";
-$('#search').change(function(){
+$('#searchrow').on('input', 'input:text', function() {
 	query = $(this).val();
 	var searchDirection = 0;
 	if(query.length > lastQuery.length)
@@ -158,9 +184,24 @@ $('#search').change(function(){
 		lastQuery = query;
 		searchDirection = -1;
 	}
-	$('#search').attr('disabled','disabled');
 	libraryView.renderSearch(query, searchDirection);
 });
+/*$('#search').change(function(){
+	query = $(this).val();
+	var searchDirection = 0;
+	if(query.length > lastQuery.length)
+	{
+		lastQuery = query;
+		searchDirection = 1;
+	}
+	if(query.length < lastQuery.length)
+	{
+		lastQuery = query;
+		searchDirection = -1;
+	}
+	//$('#search').attr('disabled','disabled');
+	libraryView.renderSearch(query, searchDirection);
+});*/
 		
 </script>
 	<style>
@@ -188,7 +229,7 @@ $('#search').change(function(){
 	.song-widget {
 		background: #FFFFFF;
 		width: 150px;
-		height: 220px;
+		height: 120px;
 		text-align: center;
 		font-family: 'Helvetica Neue', Arial, sans-serif;
 		font-weight: 300;
@@ -212,7 +253,12 @@ $('#search').change(function(){
 
 	.song-widget:hover {
 		border-top: #e74c3c solid 3px;
-		height: 260px;
+		height: 144px;
+	}
+	.mymarquee {
+		align: center;
+		width: 148px;
+		overflow: hidden;
 	}
 	</style>
   </body>

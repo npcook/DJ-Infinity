@@ -65,7 +65,10 @@ LibraryView.prototype =
 			{
 				currentRow++;
 			}
-			$('#librow' + currentRow).append(elementArray[i].getItemAsHTML());
+			$('#librow' + currentRow).append('<div id="musicParent' + i + '"></div>');
+			elementArray[i].render();
+			elementArray[i].beginAlbumArtLoad(elementArray[i]);
+			//$('#librow' + currentRow).append(elementArray[i].getItemAsHTML());
 		}
 		/**
 			Just to work
@@ -92,7 +95,10 @@ LibraryView.prototype =
 			{
 				currentRow++;
 			}
-			$('#librow' + currentRow).append(elementArray[i].getItemAsHTML());
+			$('#librow' + currentRow).append('<div id="musicParent' + elementArray[i].model.getId() + '"></div>');
+			elementArray[i].render();
+			elementArray[i].beginAlbumArtLoad(elementArray[i]);
+			//$('#librow' + currentRow).append(elementArray[i].getItemAsHTML());
 		}
 		
 		this.numRows += moreRows;
