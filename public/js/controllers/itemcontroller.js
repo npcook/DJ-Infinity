@@ -11,7 +11,6 @@ function ItemController(model, view)
 	this.view.onHoverEnd.attach(function(){
 		this.hoverOff();
 	});
-	var a = 10;
 }
 
 ItemController.prototype = 

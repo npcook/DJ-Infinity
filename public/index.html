@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap 101 Template</title>
+    <title>DJInfinity</title>
 
     <!-- Bootstrap -->
     <link href="css/bootstrap.css" rel="stylesheet">
@@ -58,6 +58,8 @@
 	musicCollection = [];
 	musicControllers = [];
 	var djName = ""; //%%This is so bad -- demo code
+	//var demoPics = ["http://userserve-ak.last.fm/serve/174s/89163847.jpg", "http://userserve-ak.last.fm/serve/174s/95407343.png", "http://userserve-ak.last.fm/serve/174s/50125071.png", "http://userserve-ak.last.fm/serve/174s/74337052.png", "http://userserve-ak.last.fm/serve/174s/89163847.jpg", "http://userserve-ak.last.fm/serve/174s/95407343.png", "http://userserve-ak.last.fm/serve/174s/74609246.jpg", "http://userserve-ak.last.fm/serve/174s/51552793.png", "http://userserve-ak.last.fm/serve/174s/97176319.png", "http://userserve-ak.last.fm/serve/174s/97176261.png", "http://userserve-ak.last.fm/serve/174s/97176261.png", "http://userserve-ak.last.fm/serve/174s/5799029.jpg", "", "http://userserve-ak.last.fm/serve/174s/89163847.jpg", "http://userserve-ak.last.fm/serve/174s/51552793.png", "", "http://userserve-ak.last.fm/serve/174s/99252313.png", "http://userserve-ak.last.fm/serve/174s/99980367.jpg", "http://userserve-ak.last.fm/serve/174s/51552793.png", "http://userserve-ak.last.fm/serve/174s/93069463.png", "http://userserve-ak.last.fm/serve/174s/89163847.jpg", "http://userserve-ak.last.fm/serve/174s/51552793.png", "http://userserve-ak.last.fm/serve/174s/42919733.png", undefined];//["http://userserve-ak.last.fm/serve/174s/89163847.jpg", "http://userserve-ak.last.fm/serve/174s/95407343.png", "http://userserve-ak.last.fm/serve/174s/74337052.png", "http://userserve-ak.last.fm/serve/174s/63135669.png", "http://userserve-ak.last.fm/serve/174s/89163847.jpg", "http://userserve-ak.last.fm/serve/174s/50125071.png", "http://userserve-ak.last.fm/serve/174s/74609246.jpg", "http://userserve-ak.last.fm/serve/174s/5799029.jpg", "http://userserve-ak.last.fm/serve/174s/97176319.png", "http://userserve-ak.last.fm/serve/174s/97176261.png", "http://userserve-ak.last.fm/serve/174s/97176261.png", "http://userserve-ak.last.fm/serve/174s/51552793.png", "", "http://userserve-ak.last.fm/serve/174s/89163847.jpg", "http://userserve-ak.last.fm/serve/174s/51552793.png", "", "http://userserve-ak.last.fm/serve/174s/99252313.png", "http://userserve-ak.last.fm/serve/174s/99980367.jpg", "http://userserve-ak.last.fm/serve/174s/51552793.png", "http://userserve-ak.last.fm/serve/174s/93069463.png", "http://userserve-ak.last.fm/serve/174s/89163847.jpg", "http://userserve-ak.last.fm/serve/174s/51552793.png", "http://userserve-ak.last.fm/serve/174s/42919733.png"];
+	var demoPics = ["http://userserve-ak.last.fm/serve/64s/74337052.png", "http://userserve-ak.last.fm/serve/64s/89163847.jpg", "http://userserve-ak.last.fm/serve/64s/50125071.png", "http://userserve-ak.last.fm/serve/64s/63135669.png", "http://userserve-ak.last.fm/serve/64s/89163847.jpg", "http://userserve-ak.last.fm/serve/64s/97176261.png", "http://userserve-ak.last.fm/serve/64s/74609246.jpg", "http://userserve-ak.last.fm/serve/64s/5799029.jpg", "http://userserve-ak.last.fm/serve/64s/51552793.png", "http://userserve-ak.last.fm/serve/64s/89163847.jpg", "http://userserve-ak.last.fm/serve/64s/95407343.png", "http://userserve-ak.last.fm/serve/64s/97176319.png", "http://userserve-ak.last.fm/serve/64s/97176261.png", "http://userserve-ak.last.fm/serve/64s/51552793.png", "", "", "http://userserve-ak.last.fm/serve/64s/99980367.jpg", "http://userserve-ak.last.fm/serve/64s/99252313.png", "http://userserve-ak.last.fm/serve/64s/51552793.png", "invalid"];
 	libraryView = null;
 	function onConnectButton()
 	{
@@ -73,6 +75,7 @@
 				for(i = 0; i < data.length; i++)
 				{
 					item = new ItemModel(i, data[i]["name"], data[i]["artist"], data[i]["album"]);
+					item.albumArt = demoPics[i];
 					view = new ItemView(item, name);//%%This is so bad -- demo code);
 					controller = new ItemController(item, view);
 					musicCollection.push(view);
@@ -91,7 +94,13 @@
 	}
 	$('#connectbutton').click(onConnectButton);
 
-	
+/*a = $.ajax({
+url: "http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=5685fa22a34072f2f7e1001edf39e582&artist=Pendulum&album=Immersion&format=json",
+dataType: "jsonp",
+success: function(data) {
+	console.log(data);
+}});*/
+
 	//http://djinfinity.cloudapp.net/library/CD/Amerika/Rammstein
 /*	a = $.ajax({
   url: "http://djinfinity.cloudapp.net/request/CD/Amerika/Rammstein",
@@ -178,7 +187,7 @@ $('#search').change(function(){
 	
 	.song-widget {
 		background: #FFFFFF;
-		width: 190px;
+		width: 150px;
 		height: 220px;
 		text-align: center;
 		font-family: 'Helvetica Neue', Arial, sans-serif;

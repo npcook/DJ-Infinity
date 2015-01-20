@@ -13,7 +13,10 @@ function ItemModel(id, name, artist, album)
 	this.isLoaded = false;
 	this.albumArt = "https://cdn3.iconfinder.com/data/icons/iconic-1/28/x-128.png";
 	self = this;
-	
+	this.imageLoadEvent = new Event(this);
+	//this.imageLoadEvent.attatch(function(data){
+	//	this.onAlbumArtLoad = data;
+	//});
 	setAlbumArt = function(url){
 		this.albumArt = url;
 	}
@@ -22,7 +25,8 @@ function ItemModel(id, name, artist, album)
 	  html = data;
 	  //jsonData = JSON.parse(data);
 	  //self.albumArt = html['album']['image'][2]['#text'];
-	  setAlbumArt(html['album']['image'][2]['#text']);
+	 // self.imageLoadEvent.notify(html['album']['image'][2]['#text']);
+	  //setAlbumArt(html['album']['image'][2]['#text']);
 	  self.isLoaded = true;
 	}, error: function(code, message){
 	  this.albumArt = "invalid";
@@ -68,6 +72,11 @@ ItemModel.prototype =
 	update : function()
 	{
 		document.getElementById(this.id).src = this.albumArt;
+	},
+	
+	onAlbumArtLoad : function(data)
+	{
+		this.model.albumArt = data;
 	},
 	
 	loadAlbumArt : function()
