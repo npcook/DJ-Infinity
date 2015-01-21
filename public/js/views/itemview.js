@@ -18,7 +18,7 @@ function notHovering(elementName)
 	$(elementName).find('div#album').css("display", "none");
 	$(elementName).find('div#request').css("display", "none");
 }
-function ItemView(itemModel, element)//, badcode) 
+function ItemView(itemModel, element, dj)//, badcode) 
 {
 	this.model = itemModel;
 	this.elementName = '#big' + this.model.getId();
@@ -26,7 +26,7 @@ function ItemView(itemModel, element)//, badcode)
 	this.elementId = 'big' + this.model.getId();
 	this.onHoverStart = new Event(this);
 	this.onHoverEnd = new Event(this);
-	this.badcode = element;//"CD";
+	this.badcode = dj;//element;//"CD";
 	//this.requestButtonClick = new Event(this);
 	this.requestString = "http://djinfinity.cloudapp.net/request/" + this.badcode + "/" + this.model.getName() + "/" + this.model.getArtist(); //%%This is so bad -- demo code
 	$(this.elementName).hover(

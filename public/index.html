@@ -101,7 +101,7 @@
 				{
 					item = new ItemModel(i, data[i]["name"], data[i]["artist"], data[i]["album"]);
 					//item.albumArt = demoPics[i];
-					view = new ItemView(item, '#musicParent' + i);//view = new ItemView(item, name);//%%This is so bad -- demo code);
+					view = new ItemView(item, '#musicParent' + i, name);//view = new ItemView(item, name);//%%This is so bad -- demo code);
 					controller = new ItemController(item, view);
 					musicCollection.push(view);
 					//musicControllers.push(controller);
